@@ -1,17 +1,17 @@
 import { useState } from "react";
 import "./App.css";
-import contacts from "./contacts.json";
+import conts from "./contacts.json";
 import { v4 as uuidv4 } from 'uuid';
 
 
 
 function App() {
   
-  const [contactsFirstFive, setContacts] = useState(contacts.slice(0,4))
+  const [contacts, setContacts] = useState(conts.slice(0,4))
 
   const addRandomContact = () => {
-    const randomNumber = Math.floor(Math.random()*contacts.length);
-    const randomContact = contacts[randomNumber];
+    const randomNumber = Math.floor(Math.random()*conts.length);
+    const randomContact = conts[randomNumber];
   
     setContacts(prevContacts => {
 
@@ -21,6 +21,7 @@ function App() {
       return prevContacts;
       }
   })
+  console.log(contacts)
   }
 
   const sortContacts= (varName) => {
@@ -30,19 +31,19 @@ function App() {
         if (varName === "Pop") {
           sortedContacts = prevContacts.sort((c1, c2) => {
             if (c1.popularity < c2.popularity) {
-              console.log(c1.popularity)
+              
               return 1;
               
             }
             if (c2.popularity < c1.popularity)  {
-              console.log(c2.popularity)
+              
               return -1;
             
           }
             return 0;
           })
 
-          console.log(sortedContacts)
+          
        
       } else if (varName === "Name"){
       
@@ -57,9 +58,22 @@ function App() {
     }
   )
   }
+
+  const deleteContact = (id) => {
+    
+    const updatedContact = contacts.filter(item => {
+      if (item.id !== id) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    
+    setContacts(updatedContact);
+  }
   
 
-  console.log(contactsFirstFive)
+
   return (
     <div className="App">
       <button onClick={addRandomContact}>Add random Contact</button>
@@ -75,13 +89,14 @@ function App() {
             <th>Pop</th>
             <th>Won an Oscar</th>
             <th>Won an Emmy</th>
+            <th>Actions</th>
 
           </tr>
 
         </thead>
 
         <tbody>
-          {contactsFirstFive.map( oneContact => {
+          {contacts.map( oneContact => {
             return (
               <tr key={uuidv4()}>
                 <td>
@@ -98,6 +113,9 @@ function App() {
                 </td>
                 <td>
                   <h2>{oneContact.wonEmmy ?  "🌟" :null}</h2>
+                </td>
+                <td>
+                  <button onClick={() => deleteContact(oneContact.id)} >Delete</button>
                 </td>
               </tr>
             )
